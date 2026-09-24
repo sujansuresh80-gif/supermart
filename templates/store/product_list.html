@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}
+SuperMart - Products
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================
+     PRODUCTS HEADER
+========================== -->
+
+<div class="products-header">
+
+    <h1>Our Products</h1>
+
+    <p>
+        Browse our available supermarket products.
+    </p>
+
+</div>
+
+
+<!-- =========================
+     SEARCH
+========================== -->
+
+<form
+    method="GET"
+    class="search-form"
+>
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search products..."
+        value="{{ search_query }}"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
+
+
+<!-- =========================
+     ADMIN ADD PRODUCT
+========================== -->
+
+{% if user.is_staff %}
+
+    <a
+        href="{% url 'product_create' %}"
+        class="button"
+    >
+        + Add Product
+    </a>
+
+{% endif %}
+
+
+<br><br>
+
+
+<!-- =========================
+     PRODUCT LIST
+========================== -->
+
+{% if products %}
+
+    <div class="product-grid">
+
+        {% for product in products %}
+
+            <div class="product-card">
+
+
+                <!-- Product Image -->
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% else %}
+
+                    <div class="no-image">
+                        🛒
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Product Name -->
+
+                <h3>
+
+                    <a
+                        href="{% url 'product_detail' product.id %}"
+                    >
+                        {{ product.name }}
+                    </a>
+
+                </h3>
+
+
+                <!-- Category -->
+
+                <p>
+
+                    <strong>
+                        Category:
+                    </strong>
+
+                    {{ product.category }}
+
+                </p>
+
+
+                <!-- Price -->
+
+                <p class="product-price">
+
+                    ₹{{ product.price }}
+
+                </p>
+
+
+                <!-- Stock -->
+
+                {% if product.stock > 0 %}
+
+                    <p class="product-stock">
+
+                        Stock:
+                        {{ product.stock }}
+
+                    </p>
+
+                {% else %}
+
+                    <p class="product-stock">
+
+                        <strong>
+                            Out of Stock
+                        </strong>
+
+                    </p>
+
+                {% endif %}
+
+
+                <!-- View Product -->
+
+                <a
+                    href="{% url 'product_detail' product.id %}"
+                    class="button"
+                >
+                    View Product
+                </a>
+
+
+                <!-- Admin Actions -->
+
+                {% if user.is_staff %}
+
+                    <div class="admin-actions">
+
+                        <a
+                            href="{% url 'product_update' product.id %}"
+                        >
+                            Edit
+                        </a>
+
+                        <span>|</span>
+
+                       <a
+    href="{% url 'product_delete' product.id %}"
+    onclick="return confirmDelete('{{ product.name|escapejs }}');"
+>
+    Delete
+</a>
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+{% else %}
+
+
+    <!-- =========================
+         NO PRODUCTS
+    ========================== -->
+
+    <div class="no-products">
+
+        {% if search_query %}
+
+            <h2>
+                No products found
+            </h2>
+
+            <p>
+                No products found for
+                "<strong>{{ search_query }}</strong>".
+            </p>
+
+            <a
+                href="{% url 'product_list' %}"
+                class="button"
+            >
+                View All Products
+            </a>
+
+        {% else %}
+
+            <h2>
+                No Products Available
+            </h2>
+
+            <p>
+                There are currently no products available.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+SuperMart - Home
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================
+     HERO SECTION
+========================== -->
+
+<section class="home-section">
+
+    <h1>
+        Welcome to SuperMart 🛒
+    </h1>
+
+    <p>
+        Your one-stop destination for everyday grocery products.
+    </p>
+
+    <a
+        href="{% url 'product_list' %}"
+        class="button"
+    >
+        View Products
+    </a>
+
+</section>
+
+
+<!-- =========================
+     LATEST PRODUCTS
+========================== -->
+
+<section>
+
+    <h2>
+        Latest Products
+    </h2>
+
+
+    {% if products %}
+
+        <div class="product-grid">
+
+            {% for product in products|slice:":4" %}
+
+                <div class="product-card">
+
+
+                    <!-- Product Image -->
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="no-image">
+                            🛒
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Product Name -->
+
+                    <h3>
+                        {{ product.name }}
+                    </h3>
+
+
+                    <!-- Category -->
+
+                    <p>
+                        <strong>
+                            Category:
+                        </strong>
+
+                        {{ product.category }}
+                    </p>
+
+
+                    <!-- Price -->
+
+                    <p class="product-price">
+
+                        ₹{{ product.price }}
+
+                    </p>
+
+
+                    <!-- Stock -->
+
+                    {% if product.stock > 0 %}
+
+                        <p class="product-stock">
+
+                            Stock:
+                            {{ product.stock }}
+
+                        </p>
+
+                    {% else %}
+
+                        <p class="product-stock">
+
+                            <strong>
+                                Out of Stock
+                            </strong>
+
+                        </p>
+
+                    {% endif %}
+
+
+                    <!-- View -->
+
+                    <a
+                        href="{% url 'product_detail' product.id %}"
+                        class="button"
+                    >
+                        View Product
+                    </a>
+
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="no-products">
+
+            <h3>
+                No Products Available
+            </h3>
+
+            <p>
+                Products will appear here when they are added.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+</section>
+
+
+{% endblock %}

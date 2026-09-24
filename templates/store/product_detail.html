@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+SuperMart - {{ product.name }}
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================
+     PRODUCT DETAIL
+========================== -->
+
+<div class="product-detail">
+
+
+    <!-- Product Image -->
+
+    {% if product.image %}
+
+        <img
+            src="{{ product.image.url }}"
+            alt="{{ product.name }}"
+        >
+
+    {% else %}
+
+        <div class="no-image">
+            🛒
+        </div>
+
+    {% endif %}
+
+
+    <!-- Product Name -->
+
+    <h1>
+        {{ product.name }}
+    </h1>
+
+
+    <!-- Category -->
+
+    <p>
+
+        <strong>
+            Category:
+        </strong>
+
+        {{ product.category }}
+
+    </p>
+
+
+    <!-- Description -->
+
+    <p>
+
+        <strong>
+            Description:
+        </strong>
+
+        {{ product.description }}
+
+    </p>
+
+
+    <!-- Price -->
+
+    <p class="product-price">
+
+        ₹{{ product.price }}
+
+    </p>
+
+
+    <!-- Stock -->
+
+    {% if product.stock > 0 %}
+
+        <p class="product-stock">
+
+            <strong>
+                Available Stock:
+            </strong>
+
+            {{ product.stock }}
+
+        </p>
+
+
+        <!-- =========================
+             QUANTITY
+        ========================== -->
+
+        <div class="quantity-control">
+
+            <label for="quantity">
+
+                <strong>
+                    Quantity:
+                </strong>
+
+            </label>
+
+
+            <button
+                type="button"
+                onclick="decreaseQuantity()"
+            >
+                −
+            </button>
+
+
+            <input
+                type="number"
+                id="quantity"
+                value="1"
+                min="1"
+                max="{{ product.stock }}"
+                readonly
+            >
+
+
+            <button
+                type="button"
+                onclick="increaseQuantity()"
+            >
+                +
+            </button>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- =========================
+             ORDER FORM
+        ========================== -->
+
+        {% if user.is_authenticated %}
+
+            <form
+                method="POST"
+                action="{% url 'add_order' product.id %}"
+            >
+
+                {% csrf_token %}
+
+
+                <input
+                    type="hidden"
+                    name="quantity"
+                    id="order-quantity"
+                    value="1"
+                >
+
+
+                <button type="submit">
+                    🛒 Add Order
+                </button>
+
+            </form>
+
+
+        {% else %}
+
+            <p>
+
+                Please
+                <a href="{% url 'login' %}">
+                    login
+                </a>
+                to place an order.
+
+            </p>
+
+        {% endif %}
+
+
+    {% else %}
+
+
+        <!-- OUT OF STOCK -->
+
+        <p class="message error">
+
+            <strong>
+                Out of Stock
+            </strong>
+
+        </p>
+
+    {% endif %}
+
+
+    <!-- Back -->
+
+    <br>
+
+    <a
+        href="{% url 'product_list' %}"
+        class="button"
+    >
+        ← Back to Products
+    </a>
+
+
+</div>
+
+
+{% endblock %}

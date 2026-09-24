@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+SuperMart - Delete Product
+{% endblock %}
+
+{% block content %}
+
+<h1>SuperMart</h1>
+
+<h2>Delete Product</h2>
+
+<p>
+    Are you sure you want to delete
+    <strong>{{ product.name }}</strong>?
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <button type="submit">
+        Yes, Delete
+    </button>
+
+    <a href="{% url 'product_list' %}">
+        Cancel
+    </a>
+
+</form>
+
+{% endblock %}
